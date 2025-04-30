@@ -110,6 +110,7 @@ class TrainAndLoggingCallback(BaseCallback):
     def _init_callback(self):
         if self.save_path is not None:
             os.makedirs(self.save_path, exist_ok=True)
+            print('Saving models to {}'.format(self.save_path))
 
     def _on_step(self):
         if self.n_calls % self.check_freq == 0:
@@ -146,10 +147,23 @@ env_checker.check_env(env) # Check the environment
 CHECKPOINT_DIR = './train/'
 LOG_DIR = './logs/'
 
-callback = TrainAndLoggingCallback(check_freq=1000, save_path=CHECKPOINT_DIR)
+callback = TrainAndLoggingCallback(check_freq=10, save_path=CHECKPOINT_DIR)
 
 # Create the DQN model
 model = DQN('CnnPolicy', env, tensorboard_log=LOG_DIR, verbose=1, buffer_size=1200000, learning_starts=1000)
 
 # Kick off training
-model.learn(total_timesteps=5000, callback=callback)
+model.learn(total_timesteps=88000, callback=callback)
+
+for episode in range(1):
+    obs = env.reset()
+    done = False
+    total_reward = 0
+
+    while not done:
+        action, _ = model.predict(obs)
+        obs, reward, done, info = env.step(int(action))
+        time.sleep(0.01)
+        # obs, reward, done, info = env.step(env.action_space.sample())
+        total_reward += reward
+    print(f'Total Reward for episode {episode} is {total_reward}')
