@@ -11,7 +11,7 @@ from gym.spaces import Box, Discrete
 # IMport os for file path management
 import os
 # IMport Base Callback for saving models
-from stable_baselines3.common.callbacks import BaseCallBack
+from stable_baselines3.common.callbacks import BaseCallback
 #Check the environment
 from stable_baselines3.common import env_checker
 
@@ -101,7 +101,7 @@ class WebGame(Env):
 
         return done, done_cap 
     
-class TrainAndLoggingCallback(BaseCallBack):
+class TrainAndLoggingCallback(BaseCallback):
     def __init__(self, check_freq, save_path, verbose=1):
         super(TrainAndLoggingCallback, self).__init__(verbose)
         self.check_freq = check_freq
